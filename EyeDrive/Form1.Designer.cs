@@ -39,6 +39,9 @@
             this.chkVfsCacheMinimal = new System.Windows.Forms.ToolStripMenuItem();
             this.chkVfsCacheWrites = new System.Windows.Forms.ToolStripMenuItem();
             this.chkVfsCacheFull = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.chkTLSImplicit = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkTLSExplicit = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -53,10 +56,9 @@
             this.txtMount = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.chkTLSImplicit = new System.Windows.Forms.ToolStripMenuItem();
-            this.chkTLSExplicit = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnForcedDisconnect = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkCMDRun = new System.Windows.Forms.CheckBox();
+            this.chkDirectShowDebug = new System.Windows.Forms.CheckBox();
+            this.txtResult = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -101,8 +103,6 @@
             // 
             // btnDisconnect
             // 
-            this.btnDisconnect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnForcedDisconnect});
             this.btnDisconnect.Name = "btnDisconnect";
             this.btnDisconnect.Size = new System.Drawing.Size(118, 29);
             this.btnDisconnect.Text = "Disconnect";
@@ -156,13 +156,36 @@
             this.chkVfsCacheFull.Text = "VFS Cache: Full";
             this.chkVfsCacheFull.CheckedChanged += new System.EventHandler(this.chkVfsCacheFull_CheckedChanged);
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(270, 6);
+            // 
+            // chkTLSImplicit
+            // 
+            this.chkTLSImplicit.CheckOnClick = true;
+            this.chkTLSImplicit.Name = "chkTLSImplicit";
+            this.chkTLSImplicit.Size = new System.Drawing.Size(273, 34);
+            this.chkTLSImplicit.Text = "TLS Implicit";
+            this.chkTLSImplicit.Click += new System.EventHandler(this.chkTLSImplicit_Click);
+            // 
+            // chkTLSExplicit
+            // 
+            this.chkTLSExplicit.Checked = true;
+            this.chkTLSExplicit.CheckOnClick = true;
+            this.chkTLSExplicit.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTLSExplicit.Name = "chkTLSExplicit";
+            this.chkTLSExplicit.Size = new System.Drawing.Size(273, 34);
+            this.chkTLSExplicit.Text = "TLS Explicit";
+            this.chkTLSExplicit.Click += new System.EventHandler(this.chkTLSExplicit_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus,
             this.lblStatus2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 238);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 301);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(393, 32);
             this.statusStrip1.TabIndex = 3;
@@ -278,41 +301,43 @@
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // toolStripMenuItem2
+            // chkCMDRun
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(270, 6);
+            this.chkCMDRun.AutoSize = true;
+            this.chkCMDRun.Checked = true;
+            this.chkCMDRun.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCMDRun.Location = new System.Drawing.Point(148, 270);
+            this.chkCMDRun.Name = "chkCMDRun";
+            this.chkCMDRun.Size = new System.Drawing.Size(161, 22);
+            this.chkCMDRun.TabIndex = 20;
+            this.chkCMDRun.Text = "CMD Run Mode";
+            this.chkCMDRun.UseVisualStyleBackColor = true;
             // 
-            // chkTLSImplicit
+            // chkDirectShowDebug
             // 
-            this.chkTLSImplicit.CheckOnClick = true;
-            this.chkTLSImplicit.Name = "chkTLSImplicit";
-            this.chkTLSImplicit.Size = new System.Drawing.Size(273, 34);
-            this.chkTLSImplicit.Text = "TLS Implicit";
-            this.chkTLSImplicit.Click += new System.EventHandler(this.chkTLSImplicit_Click);
+            this.chkDirectShowDebug.AutoSize = true;
+            this.chkDirectShowDebug.Location = new System.Drawing.Point(15, 270);
+            this.chkDirectShowDebug.Name = "chkDirectShowDebug";
+            this.chkDirectShowDebug.Size = new System.Drawing.Size(119, 22);
+            this.chkDirectShowDebug.TabIndex = 19;
+            this.chkDirectShowDebug.Text = "D.S.Debug";
+            this.chkDirectShowDebug.UseVisualStyleBackColor = true;
             // 
-            // chkTLSExplicit
+            // txtResult
             // 
-            this.chkTLSExplicit.Checked = true;
-            this.chkTLSExplicit.CheckOnClick = true;
-            this.chkTLSExplicit.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTLSExplicit.Name = "chkTLSExplicit";
-            this.chkTLSExplicit.Size = new System.Drawing.Size(273, 34);
-            this.chkTLSExplicit.Text = "TLS Explicit";
-            this.chkTLSExplicit.Click += new System.EventHandler(this.chkTLSExplicit_Click);
-            // 
-            // btnForcedDisconnect
-            // 
-            this.btnForcedDisconnect.Name = "btnForcedDisconnect";
-            this.btnForcedDisconnect.Size = new System.Drawing.Size(270, 34);
-            this.btnForcedDisconnect.Text = "Forced Disconnect";
-            this.btnForcedDisconnect.Click += new System.EventHandler(this.btnForcedDisconnect_Click);
+            this.txtResult.Location = new System.Drawing.Point(15, 236);
+            this.txtResult.Name = "txtResult";
+            this.txtResult.Size = new System.Drawing.Size(366, 28);
+            this.txtResult.TabIndex = 18;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(393, 270);
+            this.ClientSize = new System.Drawing.Size(393, 333);
+            this.Controls.Add(this.chkCMDRun);
+            this.Controls.Add(this.chkDirectShowDebug);
+            this.Controls.Add(this.txtResult);
             this.Controls.Add(this.txtMount);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.chkCMDHide);
@@ -371,7 +396,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem chkTLSImplicit;
         private System.Windows.Forms.ToolStripMenuItem chkTLSExplicit;
-        private System.Windows.Forms.ToolStripMenuItem btnForcedDisconnect;
+        private System.Windows.Forms.CheckBox chkCMDRun;
+        private System.Windows.Forms.CheckBox chkDirectShowDebug;
+        private System.Windows.Forms.TextBox txtResult;
     }
 }
 

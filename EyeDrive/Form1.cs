@@ -1,9 +1,10 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,21 +29,27 @@ namespace EyeDriveFTPS
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if(txtServer.Text == "" || txtID.Text == "" || txtPW.Text == "")
+            if (txtServer.Text == "" || txtID.Text == "" || txtPW.Text == "")
             {
-                MessageBox.Show("ì„œë²„, ì•„ì´ë””, ì•”í˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+                MessageBox.Show("¼­¹ö, ¾ÆÀÌµğ, ¾ÏÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
                 return;
             }
-            if(txtMount.Text == "" || txtMount.Text.IndexOf("\\") != -1)
+            if (txtMount.Text == "" || txtMount.Text.IndexOf("\\") != -1)
             {
-                MessageBox.Show("ë§ˆìš´íŠ¸ ì •ë³´ê°€ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤");
+                MessageBox.Show("¸¶¿îÆ® Á¤º¸°¡ Àß¸øµÇ¾ú½À´Ï´Ù");
                 return;
             }
-            if(th != null)
+            if (th != null)
             {
-                MessageBox.Show("ì—°ê²°ì„ ë¨¼ì € í•´ì œí•˜ì„¸ìš”");
+                MessageBox.Show("¿¬°áÀ» ¸ÕÀú ÇØÁ¦ÇÏ¼¼¿ä");
                 return;
             }
+            try
+            {
+                if ((new DirectoryInfo(txtCache.Text)).Exists == false)
+                    txtCache.Text = "";
+            }
+            catch (Exception ex) { txtCache.Text = ""; }
 
             lblStatus.Text = "Connecting...";
             Application.DoEvents();
@@ -69,16 +76,23 @@ namespace EyeDriveFTPS
             if (chkTLSExplicit.Checked)
                 tlsmode = " --ftp-explicit-tls=true";
 
-            string opt = " :ftp:/ "+txtMount.Text+ " --ftp-host=" + server+ " --ftp-port="+port+tlsmode+" --ftp-user=" + txtID.Text+" --ftp-pass="+pw+" --vfs-cache-mode="+vfscache;
+            string opt = " :ftp:/ " + txtMount.Text + " --ftp-host=" + server + " --ftp-port=" + port + tlsmode + " --ftp-user=" + txtID.Text + " --ftp-pass=" + pw + " --vfs-cache-mode=" + vfscache + " --vfs-cache-max-age=1h --vfs-cache-max-size=30G --vfs-read-ahead=10G --vfs-read-chunk-size=32M --dir-cache-time=30m --buffer-size=512M --poll-interval=15m --transfers=12 --no-modtime --no-checksum --low-level-retries=5 --retries=3";
+            opt += " -P --stats-one-line";
             if (txtCache.Text != "")
                 opt += " --cache-dir=" + txtCache.Text;
             if (chkDebug.Checked)
                 opt += " --log-file log.txt --log-level=DEBUG";
+            if (chkDirectShowDebug.Checked)
+                opt += " -vv";
             if (chkWindowsRW.Checked)
                 opt += " -o FileSecurity=\"D:P(A;;FA;;;WD)\"";
 
             //th = new System.Threading.Thread(() => connectWebDav(opt, chkCMDHide.Checked));
-            connectWebDav(opt, chkCMDHide.Checked);
+            txtResult.Text = "rclone.exe mount" + opt;
+            if (!chkCMDRun.Checked)
+                connectWebDav(opt, chkCMDHide.Checked);
+            else
+                System.Diagnostics.Process.Start("CMD.exe", "/C " + Application.StartupPath + "\\rclone-ftp.exe mount" + opt);
             timer.Enabled = true;
 
             lblStatus.Text = "Connected.";
@@ -116,13 +130,13 @@ namespace EyeDriveFTPS
             cmd.FileName = @"cmd";
             if (hide == true)
             {
-                cmd.WindowStyle = ProcessWindowStyle.Hidden;             // cmdì°½ì´ ìˆ¨ê²¨ì§€ë„ë¡ í•˜ê¸°
-                cmd.CreateNoWindow = true;                               // cmdì°½ì„ ë„ìš°ì§€ ì•ˆë„ë¡ í•˜ê¸°
+                cmd.WindowStyle = ProcessWindowStyle.Hidden;             // cmdÃ¢ÀÌ ¼û°ÜÁöµµ·Ï ÇÏ±â
+                cmd.CreateNoWindow = true;                               // cmdÃ¢À» ¶ç¿ìÁö ¾Èµµ·Ï ÇÏ±â
             }
             else
             {
-                cmd.WindowStyle = ProcessWindowStyle.Normal;             // cmdì°½ì´ ìˆ¨ê²¨ì§€ë„ë¡ í•˜ê¸°
-                cmd.CreateNoWindow = false;                               // cmdì°½ì„ ë„ìš°ì§€ ì•ˆë„ë¡ í•˜ê¸°
+                cmd.WindowStyle = ProcessWindowStyle.Normal;             // cmdÃ¢ÀÌ ¼û°ÜÁöµµ·Ï ÇÏ±â
+                cmd.CreateNoWindow = false;                               // cmdÃ¢À» ¶ç¿ìÁö ¾Èµµ·Ï ÇÏ±â
             }
 
             cmd.UseShellExecute = false;
@@ -168,13 +182,13 @@ namespace EyeDriveFTPS
             cmd_con.FileName = @"cmd";
             if (hide == true)
             {
-                cmd_con.WindowStyle = ProcessWindowStyle.Hidden;             // cmdì°½ì´ ìˆ¨ê²¨ì§€ë„ë¡ í•˜ê¸°
-                cmd_con.CreateNoWindow = true;                               // cmdì°½ì„ ë„ìš°ì§€ ì•ˆë„ë¡ í•˜ê¸°
+                cmd_con.WindowStyle = ProcessWindowStyle.Hidden;             // cmdÃ¢ÀÌ ¼û°ÜÁöµµ·Ï ÇÏ±â
+                cmd_con.CreateNoWindow = true;                               // cmdÃ¢À» ¶ç¿ìÁö ¾Èµµ·Ï ÇÏ±â
             }
             else
             {
-                cmd_con.WindowStyle = ProcessWindowStyle.Normal;             // cmdì°½ì´ ìˆ¨ê²¨ì§€ë„ë¡ í•˜ê¸°
-                cmd_con.CreateNoWindow = false;                               // cmdì°½ì„ ë„ìš°ì§€ ì•ˆë„ë¡ í•˜ê¸°
+                cmd_con.WindowStyle = ProcessWindowStyle.Normal;             // cmdÃ¢ÀÌ ¼û°ÜÁöµµ·Ï ÇÏ±â
+                cmd_con.CreateNoWindow = false;                               // cmdÃ¢À» ¶ç¿ìÁö ¾Èµµ·Ï ÇÏ±â
             }
 
             cmd_con.UseShellExecute = false;
@@ -292,7 +306,7 @@ namespace EyeDriveFTPS
 
         private void chkTLSImplicit_Click(object sender, EventArgs e)
         {
-            if(chkTLSImplicit.Checked)
+            if (chkTLSImplicit.Checked)
                 chkTLSExplicit.Checked = false;
         }
 
